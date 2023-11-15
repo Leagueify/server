@@ -7,7 +7,7 @@ router
     // #swagger.tags = ['Players']
     // #swagger.summary = 'Return '
     // #swagger.description = 'Return or Search for Leagues'
-    res.json("Player");
+    res.json("Players");
   })
   .post((req, res) => {
     // #swagger.tags = ['Players']
