@@ -1,6 +1,6 @@
 # Leagueify Server
 
-The Leagueify server project contains the API and database needed for the "backend" of the Leagueify application.
+The Leagueify server project contains core infrastructure (API, database, etc.) for the "backend" of all Leagueify applications.
 
 The server is written in TypeScript and uses [Prisma](https://www.prisma.io/) to manage the database schema and migrations.
 
