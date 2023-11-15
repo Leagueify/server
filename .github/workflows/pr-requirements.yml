@@ -1,0 +1,21 @@
+name: PR Requirements
+
+on:
+  pull_request:
+
+jobs:
+  pr-requirements:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Leagueify Server Repo
+        uses: actions/checkout@v4
+
+      - name: Prepare Bun Environment
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install Leagueify Server Dependencies
+        run: bun install
+
+      - name: Check Linting
+        run: bun lint
