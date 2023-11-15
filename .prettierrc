@@ -1,0 +1,7 @@
+{
+  "bracketSameLine": true,
+  "overrides": [],
+  "plugins": [],
+  "printWidth": 100,
+  "singleAttributePerLine": true
+}
