@@ -1,5 +1,6 @@
 // 3rd Party Imports
 import express from "express";
+import rateLimit from "express-rate-limit";
 import path from "path";
 import swaggerAutogen from "swagger-autogen";
 // Leagueify Imports
@@ -17,12 +18,18 @@ const docDetail = {
 };
 const docOutputFile = "./api/openapi.json";
 const docRoutes = ["./index.ts"];
+const rateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 Minute
+  max: 10, // 10 requests per minute
+  skipFailedRequests: true,
+  message: "Too many requests, please try again later.",
+});
 
 // Generate OpenAPI JSON
 swaggerAutogen({ openapi: "3.0.0" })(docOutputFile, docRoutes, docDetail);
 
 // Serve OpenAPI Docs
-app.get("/", (req, res) => {
+app.get("/", rateLimiter, (req, res) => {
   // #swagger.ignore = true
   res.sendFile(path.join(import.meta.dir + "/api/index.html"));
 });
