@@ -1,31 +1,24 @@
+// 3rd Party Imports
 import { test, expect } from "bun:test";
+import supertest from "supertest";
+// Variable Declarations
+import app from "../../../index.ts";
+const request = supertest(app);
 
 test("GET: /players", async () => {
-  const response = await fetch("http://localhost/api/players", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
-  const body = await response.json();
+  const response = await request.get("/api/players");
 
-  expect(body).toBe("Players");
+  expect(response.body).toBe("Players");
 });
 
 test("POST: /players", async () => {
-  const response = await fetch("http://localhost/api/players", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-  });
-  const body = await response.json();
+  const response = await request.post("/api/players");
 
-  expect(body).toBe("Create Player");
+  expect(response.body).toBe("Create Player");
 });
 
 test("PUT: /players", async () => {
-  const response = await fetch("http://localhost/api/players", {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-  });
-  const body = await response.json();
+  const response = await request.put("/api/players");
 
-  expect(body).toBe("Update Player");
+  expect(response.body).toBe("Update Player");
 });

@@ -41,3 +41,5 @@ app.use("/api", api);
 app.listen(appPort, () => {
   console.log(`Leagueify Server listening on port: ${appPort}`);
 });
+
+export default app;

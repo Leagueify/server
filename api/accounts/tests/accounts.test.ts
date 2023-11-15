@@ -1,51 +1,36 @@
+// 3rd Party Imports
 import { test, expect } from "bun:test";
+import supertest from "supertest";
+// Variable Declarations
+import app from "../../../index.ts";
+const request = supertest(app);
 
 test("GET: /accounts", async () => {
-  const response = await fetch("http://localhost/api/accounts", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
-  const body = await response.json();
+  const response = await request.get("/api/accounts");
 
-  expect(body).toBe("Accounts");
+  expect(response.body).toBe("Accounts");
 });
 
 test("POST: /accounts", async () => {
-  const response = await fetch("http://localhost/api/accounts", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-  });
-  const body = await response.json();
+  const response = await request.post("/api/accounts");
 
-  expect(body).toBe("Create Account");
+  expect(response.body).toBe("Create Account");
 });
 
 test("PUT: /accounts", async () => {
-  const response = await fetch("http://localhost/api/accounts", {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-  });
-  const body = await response.json();
+  const response = await request.put("/api/accounts");
 
-  expect(body).toBe("Update Account");
+  expect(response.body).toBe("Update Account");
 });
 
 test("POST: /accounts/login", async () => {
-  const response = await fetch("http://localhost/api/accounts/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-  });
-  const body = await response.json();
+  const response = await request.post("/api/accounts/login");
 
-  expect(body).toBe("Login Account");
+  expect(response.body).toBe("Login Account");
 });
 
 test("POST: /accounts/logout", async () => {
-  const response = await fetch("http://localhost/api/accounts/logout", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-  });
-  const body = await response.json();
+  const response = await request.post("/api/accounts/logout");
 
-  expect(body).toBe("Logout Account");
+  expect(response.body).toBe("Logout Account");
 });
