@@ -5,6 +5,8 @@ import path from "path";
 import swaggerAutogen from "swagger-autogen";
 // Leagueify Imports
 import api from "./api";
+import { apiDocSchema as accountSchema } from "./api/accounts/schema";
+import { apiDocSchema as emailSchema } from "./api/email/schema";
 // Variable Declarations
 const app = express();
 const appPort = 8888;
@@ -15,6 +17,12 @@ const docDetail = {
     version: "0.0.1",
   },
   host: `localhost`,
+  components: {
+    schemas: {
+      accountSchema: accountSchema,
+      emailSchema: emailSchema,
+    },
+  },
 };
 const docOutputFile = "./api/openapi.json";
 const docRoutes = ["./index.ts"];
@@ -39,7 +47,7 @@ app.use("/api", api);
 
 // Start API Server
 app.listen(appPort, () => {
-  console.log(`Leagueify Server listening on port: ${appPort}`);
+  console.log(`Leagueify Server listening at: ${Bun.env.API_BASE_URL}:${appPort}`);
 });
 
 export default app;

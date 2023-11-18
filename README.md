@@ -2,7 +2,7 @@
 
 The Leagueify server project contains core infrastructure (API, database, etc.) for the "backend" of all Leagueify applications.
 
-The server is written in TypeScript and uses [Prisma](https://www.prisma.io/) to manage the database schema and migrations.
+The server is written in TypeScript and uses [Mongoose](https://mongoosejs.com/) with [MongoDB](https://www.mongodb.com/) to manage the database schema.
 
 - [Running the Leagueify Server](#running-the-leagueify-server)
 - [Local Development](#local-development)
@@ -24,6 +24,9 @@ This project was created using [bun](https://bun.sh), which is a fast all-in-one
 Once the Leagueify Server repository is cloned, prepare the local environment by following these steps:
 
 ```bash
+# Rename template environment file
+cp template.env .env
+
 # Install Bun
 curl -fsSL https://bun.sh/install | bash
 

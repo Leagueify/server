@@ -19,10 +19,8 @@ services:
     container_name: leagueify-server
     image: ghcr.io/leagueify/server:latest
     environment:
-      DATABASE_URI: postgresql://leagueify:password@leagueify-database:5432/leagueify?schema=public
-      DATABASE_USER: leagueify
-      DATABASE_PASS: password
-      PASSWORD_PEPPER: NeverGonnaGiveYouUp
+      API_BASE_URL: http://localhost
+      DATABASE_URI: mongodb://root:example@leagueify-database:27017/leagueify-server?authSource=admin
     labels:
       - traefik.enable=true
       - traefik.http.routers.leagueify-server.entrypoints=api
@@ -34,13 +32,13 @@ services:
 
   leagueify-database:
     container_name: leagueify-database
-    image: postgres:15.2-alpine3.17
+    image: mongo:7.0.3
     environment:
-      POSTGRES_USER: leagueify
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: leagueify
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: leagueify-server
     expose:
-      - 5432
+      - 27017
     volumes:
       - database:/data/db
     restart: always
