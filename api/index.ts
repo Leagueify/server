@@ -1,11 +1,13 @@
 // 3rd Party Imports
+import bodyParser from "body-parser";
 import express from "express";
 import rateLimit from "express-rate-limit";
 import path from "path";
+// 3rd Party Types
+import { NextFunction, Request, Response } from "express";
 // Leagueify Imports
 import accounts from "./accounts";
 import leagues from "./leagues";
-import players from "./players";
 // Variable Declarations
 const rateLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 Minute
@@ -14,12 +16,6 @@ const rateLimiter = rateLimit({
   message: "Too many requests, please try again later.",
 });
 const router = express.Router();
-
-// API Root Middleware
-router.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} :: ${req.method} :: ${req.originalUrl}`);
-  next();
-});
 
 // Serve OpenAPI Docs
 router.get("/", (req, res) => {
@@ -33,9 +29,22 @@ router.get("/openapi.json", rateLimiter, (req, res) => {
   res.sendFile(path.join(import.meta.dir + "/openapi.json"));
 });
 
-// Use the imported routes
+// Parse JSON in request body
+router.use(bodyParser.json());
+
+// API Root Middleware
+router.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  // Validate JSON Body
+  if (err) {
+    res.status(400).json({ error: "Invalid JSON body" });
+  } else {
+    console.log(`${new Date().toISOString()} :: ${req.method} :: ${req.originalUrl}`);
+    next();
+  }
+});
+
+// Use the imported api routes
 router.use("/accounts", accounts);
 router.use("/leagues", leagues);
-router.use("/players", players);
 
 export default router;
