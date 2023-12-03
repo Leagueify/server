@@ -5,3 +5,9 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+
+  # Maintain Go dependencies for Leagueify
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "daily"
