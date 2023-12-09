@@ -1,5 +1,6 @@
 // 3rd Party Imports
 import express from "express";
+import rateLimit from "express-rate-limit";
 import * as jwt from "jsonwebtoken";
 import * as mongoose from "mongoose";
 // Leagueify Imports
@@ -11,8 +12,16 @@ let response: object;
 const router = express.Router();
 let statusCode: number;
 
-router.route("/").post(async (req, res) => {
-  /*
+router.route("/").post(
+  rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 5, // 5 requests per minute
+    skipFailedRequests: true,
+    validate: { ip: false },
+    message: "Too many requests, please try again later.",
+  }),
+  async (req, res) => {
+    /*
     #swagger.tags = ['Accounts']
     #swagger.summary = 'Create Account'
     #swagger.description = 'Create a new Account'
@@ -50,33 +59,34 @@ router.route("/").post(async (req, res) => {
     }
   */
 
-  try {
-    await mongoose.connect(DATABASE_URI);
-    const account = new Account(req.body);
-    account.password = req.body.password ? await hashPassword(account.password) : "";
-    account.token = await createToken(8);
-    account.isActive = true;
-    await account.save();
-    await mongoose.disconnect();
+    try {
+      await mongoose.connect(DATABASE_URI);
+      const account = new Account(req.body);
+      account.password = req.body.password ? await hashPassword(account.password) : "";
+      account.token = await createToken(8);
+      account.isActive = true;
+      await account.save();
+      await mongoose.disconnect();
 
-    const jwtToken = jwtCreation(account);
+      const jwtToken = jwtCreation(account);
 
-    // This is where we would send account creation email
-    statusCode = 201;
-    response = {
-      token: jwtToken,
-    };
-  } catch (exception: any) {
-    statusCode = 400;
-    response = {
-      message: [],
-    };
-    for (let _error in exception.errors) {
-      response.message.push(exception.errors[_error].message);
+      // This is where we would send account creation email
+      statusCode = 201;
+      response = {
+        token: jwtToken,
+      };
+    } catch (exception: any) {
+      statusCode = 400;
+      response = {
+        message: [],
+      };
+      for (let _error in exception.errors) {
+        response.message.push(exception.errors[_error].message);
+      }
     }
-  }
-  res.status(statusCode).json(response);
-});
+    res.status(statusCode).json(response);
+  },
+);
 
 export default router;
 
