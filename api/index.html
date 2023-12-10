@@ -5,17 +5,25 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Leagueify API Docs</title>
-    <!-- Embed elements Elements via Web Component -->
+    <title>Leagueify API Documentation</title>
+    <meta
+      name="description"
+      content="Leagueify API Documentation" />
+    <link
+      rel="icon"
+      href="Leagueify Logo.svg" />
     <script src="https://unpkg.com/@stoplight/elements/web-components.min.js"></script>
     <link
       rel="stylesheet"
       href="https://unpkg.com/@stoplight/elements/styles.min.css" />
   </head>
-  <body>
+
+  <body style="height: 100vh">
     <elements-api
       apiDescriptionUrl="http://localhost/api/openapi.json"
       router="hash"
-      layout="sidebar" />
+      layout="sidebar"
+      hideExport="true"
+      hideSchemas="true" />
   </body>
 </html>
