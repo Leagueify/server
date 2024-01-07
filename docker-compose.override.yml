@@ -6,13 +6,4 @@ services:
     image: leagueify-server
     build:
       context: .
-    environment:
-      DATABASE_URI: mongodb://root:example@leagueify-database-dev:27017/leagueify-server?authSource=admin
-      PUBLIC_SENTRY: false
-    volumes:
-      - ./:/usr/src/app
 
-  leagueify-database:
-    container_name: leagueify-database-dev
-    ports:
-      - 27017:27017

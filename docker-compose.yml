@@ -3,46 +3,26 @@ version: "3.9"
 services:
   traefik:
     container_name: leagueify-traefik
-    image: traefik:v2.9.6
+    image: traefik:v2.10.7
     command:
       - --api.insecure=true
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
-      - --entrypoints.api.address=:8888
+      - --entrypoints.api.address=:8000
     ports:
-      - 80:8888
-      - 8080:8080
+      - 80:8000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   leagueify-server:
     container_name: leagueify-server
     image: ghcr.io/leagueify/server:latest
-    environment:
-      API_BASE_URL: http://localhost
-      DATABASE_URI: mongodb://root:example@leagueify-database:27017/leagueify-server?authSource=admin
-      JWT_SECRET: example
     labels:
       - traefik.enable=true
       - traefik.http.routers.leagueify-server.entrypoints=api
       - traefik.http.routers.leagueify-server.rule=PathPrefix(`/`)
       - traefik.http.middlewares.leagueify-server.ratelimit.average=100
     expose:
-      - 8888
+      - 8000
     restart: always
 
-  leagueify-database:
-    container_name: leagueify-database
-    image: mongo:7.0.3
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_DATABASE: leagueify-server
-    expose:
-      - 27017
-    volumes:
-      - database:/data/db
-    restart: always
-
-volumes:
-  database:

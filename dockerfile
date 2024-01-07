@@ -1,21 +1,25 @@
-FROM oven/bun:1.0.11-alpine as base
-WORKDIR /usr/src/app
+# syntax=docker/dockerfile:1
 
-FROM base AS install
-RUN mkdir -p /temp/dev
-COPY package.json bun.lockb /temp/dev/
-RUN cd /temp/dev && bun install
+# Specify docker image
+FROM golang:1.21.5-alpine3.19 as server-build
 
-FROM install AS prerelease
-COPY --from=install /temp/dev/node_modules node_modules
-COPY . .
+# Set Work Directory, copy go mod, and download dependencies
+WORKDIR /app
+COPY go.mod ./
+RUN go mod download
 
-FROM base AS release
-COPY --from=install /temp/dev/node_modules node_modules
-COPY --from=prerelease /usr/src/app/api api
-COPY --from=prerelease /usr/src/app/index.ts .
-COPY --from=prerelease /usr/src/app/package.json .
-COPY --from=prerelease /usr/src/app/tsconfig.json .
+# Copy necessary files
+COPY * ./
 
-EXPOSE 8888/tcp
-CMD [ "bun", "dev" ]
+# Install Swaggo and Generate Swagger Schema
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+RUN swag init -g server.go --outputTypes json
+
+# Build go executable
+RUN go build -o /leagueify
+
+# Create production image
+FROM gcr.io/distroless/base-debian11 AS release
+COPY --from=server-build /leagueify /leagueify
+EXPOSE 8000
+ENTRYPOINT ["/leagueify"]
