@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"net/http"
 
 	"github.com/Leagueify/server/handlers"
@@ -22,6 +23,16 @@ import (
 // @host  localhost:8000
 // @BasePath  /api
 // @schemes http
+
+var (
+	//go:embed all:docs
+	docs embed.FS
+	//go:embed docs/index.html
+	docsHTML      embed.FS
+	docsDirFS     = echo.MustSubFS(docs, "docs")
+	docsIndexHTML = echo.MustSubFS(docsHTML, "docs")
+)
+
 func main() {
 	e := echo.New()
 
@@ -34,7 +45,8 @@ func main() {
 	e.GET("/", clientRoutes)
 
 	// API Documentation Routes
-	e.Static("/api", "docs")
+	e.FileFS("/api", "index.html", docsIndexHTML)
+	e.StaticFS("/api/", docsDirFS)
 
 	// API Routes
 	api := e.Group("/api")
