@@ -1,5 +1,4 @@
-**/openapi.json
-node_modules
+**/swagger.json
 Dockerfile*
 docker-compose*
 .dockerignore
@@ -7,11 +6,3 @@ docker-compose*
 .gitignore
 README.md
 LICENSE
-.vscode
-Makefile
-helm-charts
-.env
-.editorconfig
-.idea
-coverage*
-**/tests
