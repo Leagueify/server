@@ -2,7 +2,6 @@ package main
 
 import (
 	"embed"
-	"net/http"
 
 	"github.com/Leagueify/server/handlers"
 	"github.com/labstack/echo/v4"
@@ -25,12 +24,12 @@ import (
 // @schemes http
 
 var (
+	//go:embed all:client
+	client      embed.FS
+	clientDirFS = echo.MustSubFS(client, "client")
 	//go:embed all:docs
-	docs embed.FS
-	//go:embed docs/index.html
-	docsHTML      embed.FS
-	docsDirFS     = echo.MustSubFS(docs, "docs")
-	docsIndexHTML = echo.MustSubFS(docsHTML, "docs")
+	docs      embed.FS
+	docsDirFS = echo.MustSubFS(docs, "docs")
 )
 
 func main() {
@@ -42,10 +41,10 @@ func main() {
 	}))
 
 	// Root Client Routes
-	e.GET("/", clientRoutes)
+	e.StaticFS("/", clientDirFS)
+	//e.GET("/", clientRoutes)
 
 	// API Documentation Routes
-	e.FileFS("/api", "index.html", docsIndexHTML)
 	e.StaticFS("/api/", docsDirFS)
 
 	// API Routes
@@ -56,8 +55,4 @@ func main() {
 
 	// Start Server
 	e.Logger.Fatal(e.Start(":8000"))
-}
-
-func clientRoutes(c echo.Context) error {
-	return c.HTML(http.StatusOK, "<h1>Testing</h1>")
 }

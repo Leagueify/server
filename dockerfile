@@ -6,18 +6,17 @@ WORKDIR /app
 COPY go.mod ./
 RUN go mod download
 
-# Build Leagueify executable
+# Build Leagueify-API executable
 FROM golang:1.21.5-alpine3.19 as server-build
 COPY --from=server-base /go/pkg /go/pkg
 WORKDIR /app
 COPY . ./
 RUN go install github.com/swaggo/swag/cmd/swag@latest
 RUN swag init -g server.go --outputTypes json
-RUN CGO_ENABLED=0 GOOS=linux go build -o /leagueify .
+RUN CGO_ENABLED=0 GOOS=linux go build -o /leagueify-api .
 
 # Create production image
 FROM gcr.io/distroless/base-debian11 AS release
-COPY --from=server-build /leagueify /leagueify
-COPY --from=server-build /app/docs ./docs
+COPY --from=server-build /leagueify-api /leagueify-api
 EXPOSE 8000
-ENTRYPOINT ["/leagueify"]
+ENTRYPOINT ["/leagueify-api"]
