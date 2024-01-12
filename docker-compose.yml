@@ -22,6 +22,9 @@ services:
       - traefik.http.routers.leagueify-server.entrypoints=api
       - traefik.http.routers.leagueify-server.rule=PathPrefix(`/`)
       - traefik.http.middlewares.leagueify-server.ratelimit.average=100
+    environment:
+      DOMAIN: http://leagueify.org
+      PORT: 8000
     expose:
       - 8000
     restart: always

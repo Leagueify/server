@@ -6,4 +6,6 @@ services:
     image: leagueify-server
     build:
       context: .
-
+      dockerfile: dockerfile-dev
+    volumes:
+      - ./:/app
