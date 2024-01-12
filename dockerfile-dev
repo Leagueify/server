@@ -1,0 +1,18 @@
+# syntax=docker/dockerfile:1
+
+# Download Go dependencies
+FROM golang:1.21.5-alpine3.19 as server-base-dev
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+RUN go install github.com/cosmtrek/air@latest
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+
+# Build Leagueify-API executable
+FROM golang:1.21.5-alpine3.19 as server-builder-dev
+COPY --from=server-base-dev /go/bin /go/bin
+COPY --from=server-base-dev /go/pkg /go/pkg
+WORKDIR /app
+COPY . ./
+RUN swag init -g server.go --outputTypes json
+CMD ["air"]
