@@ -1,5 +1,4 @@
-# Leagueify Ignores
-**/swagger.json
+**/tmp/
 
 # Auto generated .gitignore file for Bun
 # Based on https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
