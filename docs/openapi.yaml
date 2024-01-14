@@ -33,16 +33,16 @@ paths:
                   description: Email associated to the account
                   type: string
                 password:
-                  descroption: Unhashed user password for the account
+                  description: Unhashed user password for the account
                   type: string
                 dateofBirth:
                   description: User's date of birth
                   type: string
                 firstName:
-                  descroption: User's first name
+                  description: User's first name
                   type: string
                 lastName:
-                  desciption: User's last name
+                  description: User's last name
                   type: string
                 phone:
                   description: User's phone number
