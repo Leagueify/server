@@ -21,20 +21,6 @@ var (
 	apiDocsDirFS = echo.MustSubFS(apiDocs, "docs")
 )
 
-// @title Leagueify API Documentation
-// @version 0.0.1
-// @description This is test server for Leagueify.
-
-// @contact.name  Leagueify Support
-// @contact.url https://leagueify.org/support
-// @contact.email support@leagueify.org
-
-// @license.name  MIT
-// @license.url https://github.com/Leagueify/server/blob/main/LICENSE
-
-// @host localhost:8000
-// @BasePath /api
-// @schemes http
 func main() {
 	e := echo.New()
 
