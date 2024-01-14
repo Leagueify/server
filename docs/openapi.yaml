@@ -1,0 +1,240 @@
+openapi: 3.1.0
+info:
+  version: 0.0.1
+  title: Leagueify API
+  summary: Open Source Sporting League Platform.
+  description: Host your own sports league using Leagueify, the all-in-one league hosting platform.
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/Leagueify/server/main/LICENSE
+  contact:
+    name: Leagueify Support
+    url: https://github.com/Leagueify/server/issues
+
+servers:
+  - url: http://localhost/api
+    description: Docker Development Server
+  - url: http://localhost:8000/api
+    description: Standalone Development Server
+
+paths:
+  /account:
+    post:
+      tags:
+      - Account
+      summary: Create an account
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                email:
+                  description: Email associated to the account
+                  type: string
+                password:
+                  descroption: Unhashed user password for the account
+                  type: string
+                dateofBirth:
+                  description: User's date of birth
+                  type: string
+                firstName:
+                  descroption: User's first name
+                  type: string
+                lastName:
+                  desciption: User's last name
+                  type: string
+                phone:
+                  description: User's phone number
+                  type: string
+              required:
+                - email
+                - password
+                - dateofBirth
+                - firstName
+                - lastName
+                - phone
+            examples:
+              valid payload:
+                summary: Valid account creation payload
+                value: {
+                  "email": "test@leagueify.org",
+                  "password": "Testu123!",
+                  "dateOfBirth": "1999-12-31",
+                  "firstName": "John",
+                  "lastName": "Doe",
+                  "phone": "+12085550123"
+                  }
+      responses:
+        '201':
+          description: Account Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    description: User JWT auth token for API requests
+                    type: string
+              examples:
+                jwtResponse:
+                  summary: Reponse containing JWT auth token
+                  value: {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibmdndXAiLCJpYXQiOjE1MTYyMzkwMjJ9.Xo1SeBJ2ZogqroCLdp0-3-r5csOtW7l1e38wwb9EUCY"
+                    }
+        '400':
+          description: Error Creating Account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorGeneral'
+              examples:
+                ErrorGeneral:
+                  $ref: '#/components/examples/ErrorGeneral'
+
+  /league:
+    post:
+      tags:
+      - League
+      summary: Create a league
+      security:
+        - bearerToken: []
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                name:
+                  description: Name of the league
+                  type: string
+                sportID:
+                  description: ID of desired sport for the league
+                  type: integer
+                divisions:
+                  description: List of Division Objects
+                  type: array
+                  items:
+                    type: object
+                    $ref: '#/components/schemas/Division'
+                positions:
+                  description: Positions players can fill on a team
+                  type: array
+                  items:
+                    type: string
+              required:
+                - name
+                - sportID
+                - divisions
+                - positions
+            examples:
+              valid payload:
+                summary: Valid league payload
+                value: {
+                  "name": "Leagueify Open League",
+                  "sportID": 1,
+                  "divisions": [
+                    {
+                      "name": "14U",
+                      "minAge": 10,
+                      "maxAge": 14,
+                      "open": false
+                    },
+                    {
+                      "name": "18U",
+                      "minAge": 13,
+                      "maxAge": 18,
+                      "open": false
+                    }
+                  ],
+                  "positions": [
+                    "Skater",
+                    "Goalie"
+                    ]
+                  }
+      responses:
+        '201':
+          description: Account Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  league:
+                    description: League ID
+                    type: integer
+              examples:
+                leagueResponse:
+                  summary: Response containing the League ID
+                  value: {
+                    "leagueID": 1
+                    }
+        '400':
+          description: Error Creating Account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorGeneral'
+              examples:
+                ErrorGeneral:
+                  $ref: '#/components/examples/ErrorGeneral'
+        '403':
+          description: Error Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorUnauthorized'
+              examples:
+                ErrorUnauthorized:
+                  $ref: '#/components/examples/ErrorUnauthorized'
+
+components:
+  schemas:
+    Division:
+      type: object
+      properties:
+        name:
+          description: Division name
+          type: string
+        minAge:
+          description: Minimum age player needs to be to play in the division
+          type: integer
+          minimum: 1
+          maximum: 127
+        maxAge:
+          description: Maximum age player needs to be to play in the division
+          type: integer
+          minimum: 1
+          maximum: 127
+        open:
+          description: Allows all players to join the division
+          type: boolean
+    ErrorGeneral:
+      type: object
+      properties:
+        message:
+          description: Error message detailing the request issue
+          type: string
+    ErrorUnauthorized:
+      type: object
+      properties:
+        message:
+          description: Error message detailing the request issue
+          type: string
+  examples:
+    ErrorGeneral:
+      summary: Response containing error message
+      value: {
+        "message": "Missing required field"
+        }
+    ErrorUnauthorized:
+      summary: Response containing unauthorized message
+      value: {
+        "message": "Unauthorized"
+        }
+
+  securitySchemes:
+    bearerToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -5,7 +5,6 @@ FROM golang:1.21.5-alpine3.19 as server-base
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
-RUN go install github.com/swaggo/swag/cmd/swag@latest
 
 # Build Leagueify-API executable
 FROM golang:1.21.5-alpine3.19 as server-builder
@@ -13,7 +12,6 @@ COPY --from=server-base-dev /go/bin /go/bin
 COPY --from=server-base /go/pkg /go/pkg
 WORKDIR /app
 COPY . ./
-RUN swag init -g server.go --outputTypes json
 RUN CGO_ENABLED=0 GOOS=linux go build -o /leagueify-api .
 
 # Create production image

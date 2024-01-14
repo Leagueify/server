@@ -10,20 +10,20 @@ import (
 
 type (
 	CreateAccountPayload struct {
-		Email       string `json:"email" validate:"required" example:"john.doe@leagueify.org"`
-		Password    string `json:"password" validate:"required" example:"Testu123!"`
-		DateOfBirth string `json:"dateOfBirth" validate:"required" example:"1990-01-01"`
-		FirstName   string `json:"firstName" validate:"required" example:"John"`
-		LastName    string `json:"lastName" validate:"required" example:"Doe"`
-		Phone       string `json:"phone" validate:"required" example:"+12085550123"`
+		Email       string `json:"email"`
+		Password    string `json:"password"`
+		DateOfBirth string `json:"dateOfBirth"`
+		FirstName   string `json:"firstName"`
+		LastName    string `json:"lastName"`
+		Phone       string `json:"phone"`
 	}
 
 	ResponseFailureAccount struct {
-		Message string `json:"message" example:"Missing Required Fields"`
+		Message string `json:"message"`
 	}
 
 	ResponseSuccessAccount struct {
-		Token string `json:"token" example:"header.payload.signature"`
+		Token string `json:"token"`
 	}
 )
 
@@ -32,15 +32,6 @@ func AccountRouter(api *echo.Group) {
 	account.POST("", createAccount)
 }
 
-// @Summary  Create Account
-// @Description  Create an account in Leagueify.
-// @Tags Account
-// @Accept json
-// @Param request body CreateAccountPayload true "Account information"
-// @Produce  json
-// @Success  200  {object}  ResponseSuccessAccount
-// @Failure 400 {object} ResponseFailureAccount
-// @Router /account [post]
 func createAccount(c echo.Context) error {
 	account := CreateAccountPayload{}
 	// Ready Request Body
