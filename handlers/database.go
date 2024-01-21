@@ -2,12 +2,18 @@ package handlers
 
 import (
 	"database/sql"
+	"fmt"
+	"os"
 
 	_ "github.com/lib/pq"
 )
 
 var (
-	connStr string = "host=leagueify-database user=leagueify password=password dbname=leagueify sslmode=disable"
+	connStr string = fmt.Sprintf(
+		"host=leagueify-database user=%s password=%s dbname=leagueify sslmode=disable",
+		os.Getenv("DATABASE_USER"),
+		os.Getenv("DATABASE_PASS"),
+	)
 )
 
 func ConnectToDatabase() (*sql.DB, error) {

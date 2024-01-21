@@ -23,6 +23,8 @@ services:
       - traefik.http.routers.leagueify-server.rule=PathPrefix(`/`)
       - traefik.http.middlewares.leagueify-server.ratelimit.average=100
     environment:
+      DATABASE_USER: leagueify
+      DATABASE_PASS: password
       DOMAIN: http://leagueify.org
       PORT: 8000
     expose:
