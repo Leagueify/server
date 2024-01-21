@@ -9,3 +9,7 @@ services:
       dockerfile: dockerfile-dev
     volumes:
       - ./:/app
+
+  leagueify-database:
+    ports:
+      - 5432:5432

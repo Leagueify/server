@@ -25,6 +25,23 @@ var (
 func main() {
 	e := echo.New()
 
+	db, err := handlers.ConnectToDatabase()
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+	defer db.Close()
+	_, err = db.Exec(`
+  CREATE TABLE IF NOT EXISTS accounts (
+    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    date_of_birth TEXT NOT NULL,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    phone TEXT NOT NULL
+  )
+  `)
+
 	// Midddleware Configuration
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "${time_rfc3339} :: ${remote_ip} :: ${level} :: ${status}:${method}:${uri}\n",
