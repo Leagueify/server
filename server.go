@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/Leagueify/server/handlers"
+	"github.com/Leagueify/server/routes"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -37,9 +38,9 @@ func main() {
 
 	// API Routes
 	api := e.Group("/api")
-	handlers.AccountRouter(api)
-	handlers.EmailRouter(api)
-	handlers.LeagueRouter(api)
+	routes.AccountRouter(api)
+	routes.EmailRouter(api)
+	routes.LeagueRouter(api)
 
 	// Start Server
 	e.Logger.Fatal(e.Start(":" + port))
