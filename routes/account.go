@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Leagueify/server/handlers"
@@ -26,9 +27,29 @@ type (
 	}
 )
 
-var (
-	err map[string]string
-)
+var err map[string]string
+
+func init() {
+	db, err := handlers.ConnectToDatabase()
+	if err != nil {
+		fmt.Print(err)
+	}
+	defer db.Close()
+	_, err = db.Exec(`
+  CREATE TABLE IF NOT EXISTS accounts (
+    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    date_of_birth TEXT NOT NULL,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    phone TEXT NOT NULL
+  )
+  `)
+	if err != nil {
+		fmt.Print(err)
+	}
+}
 
 func AccountRouter(api *echo.Group) {
 	account := api.Group("/account")
