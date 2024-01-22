@@ -33,16 +33,16 @@ paths:
                   description: Email associated to the account
                   type: string
                 password:
-                  descroption: Unhashed user password for the account
+                  description: Unhashed user password for the account
+                  type: string
+                firstName:
+                  description: User's first name
+                  type: string
+                lastName:
+                  description: User's last name
                   type: string
                 dateofBirth:
                   description: User's date of birth
-                  type: string
-                firstName:
-                  descroption: User's first name
-                  type: string
-                lastName:
-                  desciption: User's last name
                   type: string
                 phone:
                   description: User's phone number
@@ -60,9 +60,9 @@ paths:
                 value: {
                   "email": "test@leagueify.org",
                   "password": "Testu123!",
-                  "dateOfBirth": "1999-12-31",
                   "firstName": "John",
                   "lastName": "Doe",
+                  "dateOfBirth": "1999-12-31",
                   "phone": "+12085550123"
                   }
       responses:
