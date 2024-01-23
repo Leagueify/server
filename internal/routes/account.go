@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Leagueify/server/internal/handlers"
+	"github.com/Leagueify/server/internal/auth"
+	"github.com/Leagueify/server/internal/database"
+	"github.com/Leagueify/server/internal/request"
 	"github.com/labstack/echo/v4"
 )
 
@@ -30,7 +32,7 @@ type (
 var err map[string]string
 
 func init() {
-	db, err := handlers.ConnectToDatabase()
+	db, err := database.Connect()
 	if err != nil {
 		fmt.Print(err)
 	}
@@ -60,19 +62,19 @@ func createAccount(c echo.Context) error {
 	account := Account{}
 
 	// Parse Body
-	err = handlers.ParseBody(c, &account)
+	err = request.ParseBody(c, &account)
 	if err != nil {
 		return c.JSONPretty(http.StatusBadRequest, err, "  ")
 	}
 
 	// Hash Password
-	hashedPassword, err := handlers.HashPassword(account.Password)
+	hashedPassword, err := auth.HashPassword(account.Password)
 	if err != nil {
 		return c.JSONPretty(http.StatusBadRequest, err, "  ")
 	}
 
 	// Send to Database
-	db, err := handlers.ConnectToDatabase()
+	db, err := database.Connect()
 	if err != nil {
 		return c.JSONPretty(http.StatusInternalServerError, err, "  ")
 	}
@@ -98,7 +100,7 @@ func createAccount(c echo.Context) error {
 	}
 
 	// Generate JWT
-	userToken, err := handlers.GenerateJWT(accountID)
+	userToken, err := auth.GenerateJWT(accountID)
 	if err != nil {
 		errMsg := map[string]string{
 			"message": "Invalid Request",

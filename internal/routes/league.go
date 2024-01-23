@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Leagueify/server/internal/handlers"
+	"github.com/Leagueify/server/internal/auth"
+	"github.com/Leagueify/server/internal/database"
+	"github.com/Leagueify/server/internal/request"
 	"github.com/labstack/echo/v4"
 )
 
@@ -37,7 +39,7 @@ type (
 )
 
 func init() {
-	db, err := handlers.ConnectToDatabase()
+	db, err := database.Connect()
 	if err != nil {
 		fmt.Print(err)
 	}
@@ -69,21 +71,21 @@ func init() {
 
 func LeagueRouter(api *echo.Group) {
 	league := api.Group("/league")
-	league.POST("", handlers.AuthRequired(createLeague))
+	league.POST("", auth.AuthRequired(createLeague))
 }
 
 func createLeague(c echo.Context) error {
 	league := League{}
 
 	// Parse Body
-	if err = handlers.ParseBody(c, &league); err != nil {
+	if err = request.ParseBody(c, &league); err != nil {
 		return c.JSONPretty(http.StatusBadRequest, err, "  ")
 	}
 
 	// TODO: Generate Divisions and Positions
 
 	// Send to Database
-	db, err := handlers.ConnectToDatabase()
+	db, err := database.Connect()
 	if err != nil {
 		return c.JSONPretty(http.StatusInternalServerError, err, "  ")
 	}
