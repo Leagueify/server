@@ -1,7 +1,8 @@
-package handlers
+package auth
 
 import (
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -10,6 +11,10 @@ var (
 	t   *jwt.Token
 	s   string
 )
+
+func AuthRequired(handler echo.HandlerFunc) echo.HandlerFunc {
+	return handler
+}
 
 func GenerateJWT(accountID int) (string, error) {
 	key := "JWT"
