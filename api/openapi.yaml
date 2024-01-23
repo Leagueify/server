@@ -21,11 +21,11 @@ paths:
   /account:
     post:
       tags:
-      - Account
+        - Account
       summary: Create an account
       requestBody:
         content:
-          'application/json':
+          "application/json":
             schema:
               type: object
               properties:
@@ -57,16 +57,17 @@ paths:
             examples:
               valid payload:
                 summary: Valid account creation payload
-                value: {
-                  "email": "test@leagueify.org",
-                  "password": "Testu123!",
-                  "firstName": "John",
-                  "lastName": "Doe",
-                  "dateOfBirth": "1999-12-31",
-                  "phone": "+12085550123"
+                value:
+                  {
+                    "email": "test@leagueify.org",
+                    "password": "Testu123!",
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "dateOfBirth": "1999-12-31",
+                    "phone": "+12085550123",
                   }
       responses:
-        '201':
+        "201":
           description: Account Created
           content:
             application/json:
@@ -79,29 +80,30 @@ paths:
               examples:
                 jwtResponse:
                   summary: Reponse containing JWT auth token
-                  value: {
-                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibmdndXAiLCJpYXQiOjE1MTYyMzkwMjJ9.Xo1SeBJ2ZogqroCLdp0-3-r5csOtW7l1e38wwb9EUCY"
+                  value:
+                    {
+                      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibmdndXAiLCJpYXQiOjE1MTYyMzkwMjJ9.Xo1SeBJ2ZogqroCLdp0-3-r5csOtW7l1e38wwb9EUCY",
                     }
-        '400':
+        "400":
           description: Error Creating Account
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorGeneral'
+                $ref: "#/components/schemas/ErrorGeneral"
               examples:
                 ErrorGeneral:
-                  $ref: '#/components/examples/ErrorGeneral'
+                  $ref: "#/components/examples/ErrorGeneral"
 
   /league:
     post:
       tags:
-      - League
+        - League
       summary: Create a league
       security:
         - bearerToken: []
       requestBody:
         content:
-          'application/json':
+          "application/json":
             schema:
               type: object
               properties:
@@ -116,7 +118,7 @@ paths:
                   type: array
                   items:
                     type: object
-                    $ref: '#/components/schemas/Division'
+                    $ref: "#/components/schemas/Division"
                 positions:
                   description: Positions players can fill on a team
                   type: array
@@ -130,30 +132,29 @@ paths:
             examples:
               valid payload:
                 summary: Valid league payload
-                value: {
-                  "name": "Leagueify Open League",
-                  "sportID": 1,
-                  "divisions": [
-                    {
-                      "name": "14U",
-                      "minAge": 10,
-                      "maxAge": 14,
-                      "open": false
-                    },
-                    {
-                      "name": "18U",
-                      "minAge": 13,
-                      "maxAge": 18,
-                      "open": false
-                    }
-                  ],
-                  "positions": [
-                    "Skater",
-                    "Goalie"
-                    ]
+                value:
+                  {
+                    "name": "Leagueify Open League",
+                    "sportID": 1,
+                    "divisions":
+                      [
+                        {
+                          "name": "14U",
+                          "minAge": 10,
+                          "maxAge": 14,
+                          "open": false,
+                        },
+                        {
+                          "name": "18U",
+                          "minAge": 13,
+                          "maxAge": 18,
+                          "open": false,
+                        },
+                      ],
+                    "positions": ["Skater", "Goalie"],
                   }
       responses:
-        '201':
+        "201":
           description: Account Created
           content:
             application/json:
@@ -166,27 +167,25 @@ paths:
               examples:
                 leagueResponse:
                   summary: Response containing the League ID
-                  value: {
-                    "leagueID": 1
-                    }
-        '400':
+                  value: { "leagueID": 1 }
+        "400":
           description: Error Creating Account
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorGeneral'
+                $ref: "#/components/schemas/ErrorGeneral"
               examples:
                 ErrorGeneral:
-                  $ref: '#/components/examples/ErrorGeneral'
-        '403':
+                  $ref: "#/components/examples/ErrorGeneral"
+        "401":
           description: Error Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorUnauthorized'
+                $ref: "#/components/schemas/ErrorUnauthorized"
               examples:
                 ErrorUnauthorized:
-                  $ref: '#/components/examples/ErrorUnauthorized'
+                  $ref: "#/components/examples/ErrorUnauthorized"
 
 components:
   schemas:
@@ -224,14 +223,10 @@ components:
   examples:
     ErrorGeneral:
       summary: Response containing error message
-      value: {
-        "message": "Missing required field"
-        }
+      value: { "message": "Missing required field" }
     ErrorUnauthorized:
       summary: Response containing unauthorized message
-      value: {
-        "message": "Unauthorized"
-        }
+      value: { "message": "Invalid or Expired JWT" }
 
   securitySchemes:
     bearerToken:

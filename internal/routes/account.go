@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Leagueify/server/handlers"
+	"github.com/Leagueify/server/internal/handlers"
 	"github.com/labstack/echo/v4"
 )
 

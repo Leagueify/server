@@ -4,7 +4,7 @@ import (
 	"embed"
 	"os"
 
-	"github.com/Leagueify/server/routes"
+	"github.com/Leagueify/server/internal/routes"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -13,12 +13,12 @@ var (
 	// Server Settings
 	port = os.Getenv("PORT")
 
-	//go:embed all:client
-	client      embed.FS
-	clientDirFS = echo.MustSubFS(client, "client")
-	//go:embed all:docs
-	apiDocs      embed.FS
-	apiDocsDirFS = echo.MustSubFS(apiDocs, "docs")
+	//go:embed all:api
+	api      embed.FS
+	apiDirFS = echo.MustSubFS(api, "api")
+	//go:embed all:web
+	web      embed.FS
+	webDirFS = echo.MustSubFS(web, "web")
 )
 
 func main() {
@@ -30,10 +30,10 @@ func main() {
 	}))
 
 	// Root Client Routes
-	e.StaticFS("/", clientDirFS)
+	e.StaticFS("/", webDirFS)
 
 	// API Documentation Routes
-	e.StaticFS("/api", apiDocsDirFS)
+	e.StaticFS("/api", apiDirFS)
 
 	// API Routes
 	api := e.Group("/api")
